@@ -1,0 +1,31 @@
+{
+  "objects": [
+    { "id": "dl-001", "type": "daily_log", "date": "2026-02-10", "title": "Manpower: 24 crew, Equipment: 3 excavators", "location": "STA 42+50", "status": "submitted" },
+    { "id": "dl-002", "type": "daily_log", "date": "2026-02-09", "title": "Manpower: 22 crew, Equipment: 2 excavators, 1 crane", "location": "STA 41+00", "status": "submitted" },
+    { "id": "dl-003", "type": "daily_log", "date": "2026-02-08", "title": "Manpower: 20 crew, rain delay 2hr", "location": "Phase 2", "status": "submitted" },
+    { "id": "dl-004", "type": "daily_log", "date": "2026-02-07", "title": "Manpower: 24 crew, Equipment: 4 excavators", "location": "STA 43+00", "status": "submitted" },
+    { "id": "dl-005", "type": "daily_log", "date": "2026-02-06", "title": "Manpower: 18 crew, half-day due to utility hold", "location": "STA 42+50", "status": "submitted" },
+    { "id": "dl-006", "type": "daily_log", "date": "2026-02-05", "title": "Manpower: 24 crew, concrete pour CB-6", "location": "Phase 1", "status": "submitted" },
+    { "id": "dl-007", "type": "daily_log", "date": "2026-02-04", "title": "Manpower: 22 crew, subgrade prep Area B", "location": "Phase 2", "status": "submitted" },
+    { "id": "dl-008", "type": "daily_log", "date": "2026-02-03", "title": "Manpower: 20 crew, utility relocation east", "location": "STA 44+00", "status": "submitted" },
+    { "id": "rfi-048", "type": "rfi", "date": "2026-02-08", "title": "Storm drain alignment at CB-7 junction", "location": "Phase 2", "status": "open" },
+    { "id": "rfi-049", "type": "rfi", "date": "2026-02-06", "title": "Type II diffuser specification clarification", "location": "STA 42+50", "status": "open" },
+    { "id": "rfi-050", "type": "rfi", "date": "2026-02-03", "title": "Compaction testing frequency at modified subgrade", "location": "Phase 2", "status": "closed" },
+    { "id": "obs-012", "type": "observation", "date": "2026-02-09", "title": "Unmarked utility crossing at east flag", "location": "STA 42+50", "status": "open", "costDelta": 12000 },
+    { "id": "obs-013", "type": "observation", "date": "2026-02-07", "title": "Erosion control breach at south swale", "location": "Phase 1", "status": "open", "costDelta": 3500 },
+    { "id": "obs-014", "type": "observation", "date": "2026-02-05", "title": "Concrete slump test outside tolerance", "location": "CB-6", "status": "resolved" },
+    { "id": "obs-015", "type": "observation", "date": "2026-02-04", "title": "Subcontractor safety violation — missing hard hat", "location": "Phase 2", "status": "resolved" },
+    { "id": "co-003", "type": "change_event", "date": "2026-02-07", "title": "Type II diffuser specification revision", "status": "pending", "costDelta": 45000, "scheduleDeltaDays": 12 },
+    { "id": "co-004", "type": "change_event", "date": "2026-02-04", "title": "Additional dewatering at STA 43+00", "status": "pending", "costDelta": 18000, "scheduleDeltaDays": 5 },
+    { "id": "ci-015", "type": "commitment", "date": "2026-02-06", "title": "Subcontractor mobilization — Phase 2 paving", "costDelta": 185000 },
+    { "id": "ci-016", "type": "commitment", "date": "2026-02-04", "title": "Material delivery — 36-inch RCP storm drain", "costDelta": 67000 },
+    { "id": "ci-017", "type": "commitment", "date": "2026-02-02", "title": "Traffic control subcontractor — Phase 2 detour", "costDelta": 42000 }
+  ],
+  "summary": {
+    "daily_log": 8,
+    "rfi": 3,
+    "observation": 4,
+    "change_event": 2,
+    "commitment": 3
+  }
+}

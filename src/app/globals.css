@@ -1,27 +1,425 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============================================
+   ICelerate V4.0 — "The Blueprint" Design System
+   ============================================ */
+
+@theme {
+  /* Base palette */
+  --color-bg: #0A1628;
+  --color-navy: #0A1628;
+  --color-navy-light: #0F1D32;
+  --color-surface: #1E293B;
+  --color-surface-light: #263348;
+  --color-card: #1E293B;
+  --color-border: #334155;
+  --color-border-light: #475569;
+
+  /* Accent */
+  --color-accent: #FF6B35;
+  --color-accent-hover: #FF8554;
+  --color-accent-dim: rgba(255, 107, 53, 0.15);
+  --color-accent-glow: rgba(255, 107, 53, 0.4);
+
+  /* Text */
+  --color-text-primary: #F8FAFC;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
+  --color-text-dim: #475569;
+
+  /* Semantic */
+  --color-semantic-red: #EF4444;
+  --color-semantic-red-dim: rgba(239, 68, 68, 0.15);
+  --color-semantic-yellow: #F59E0B;
+  --color-semantic-yellow-dim: rgba(245, 158, 11, 0.15);
+  --color-semantic-green: #22C55E;
+  --color-semantic-green-dim: rgba(34, 197, 94, 0.15);
+  --color-semantic-blue: #3B82F6;
+  --color-semantic-blue-dim: rgba(59, 130, 246, 0.15);
+  --color-semantic-purple: #A855F7;
+  --color-semantic-purple-dim: rgba(168, 85, 247, 0.15);
+
+  /* Altitude colors */
+  --color-altitude-ground: #22C55E;
+  --color-altitude-50ft: #3B82F6;
+  --color-altitude-200ft: #A855F7;
+
+  /* Radii */
+  --radius-card: 14px;
+  --radius-input: 10px;
+  --radius-pill: 9999px;
+  --radius-sm: 6px;
+
+  /* Fonts */
+  --font-outfit: "Outfit", sans-serif;
+  --font-space-mono: "Space Mono", monospace;
+
+  /* Tooltip (stays dark in both themes) */
+  --color-tooltip-bg: #0F172A;
+  --color-tooltip-text: #F8FAFC;
+  --color-tooltip-border: #334155;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-accent-glow: 0 0 20px var(--color-accent-glow);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ============================================
+   Light theme — main content area
+   ============================================ */
+.light-content {
+  color-scheme: light;
+  background-color: #F8FAFC;
+
+  --color-bg: #F8FAFC;
+  --color-navy: #F8FAFC;
+  --color-navy-light: #F1F5F9;
+  --color-surface: #E2E8F0;
+  --color-surface-light: #CBD5E1;
+  --color-card: #FFFFFF;
+  --color-border: #D1D5DB;
+  --color-border-light: #9CA3AF;
+
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #334155;
+  --color-text-muted: #64748B;
+  --color-text-dim: #94A3B8;
+
+  --color-accent-dim: rgba(255, 107, 53, 0.10);
+  --color-accent-glow: rgba(255, 107, 53, 0.25);
+
+  --color-semantic-red-dim: rgba(239, 68, 68, 0.10);
+  --color-semantic-yellow-dim: rgba(245, 158, 11, 0.10);
+  --color-semantic-green-dim: rgba(34, 197, 94, 0.10);
+  --color-semantic-blue-dim: rgba(59, 130, 246, 0.10);
+  --color-semantic-purple-dim: rgba(168, 85, 247, 0.10);
+
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-accent-glow: 0 0 15px rgba(255, 107, 53, 0.25);
+}
+
+.light-content .glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+}
+
+.light-content .btn-primary {
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+}
+.light-content .btn-primary:hover {
+  box-shadow: 0 4px 16px rgba(255, 107, 53, 0.4);
+}
+
+/* ============================================
+   Base styles
+   ============================================ */
+
+html {
+  background-color: var(--color-navy);
+  color: var(--color-text-primary);
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-outfit);
+  background-color: var(--color-navy);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+/* ============================================
+   Utility classes
+   ============================================ */
+
+.font-data {
+  font-family: var(--font-space-mono);
+}
+
+.glass-card {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-accent), #e85d2a);
+  color: white;
+  padding: 0.625rem 1.5rem;
+  border-radius: var(--radius-input);
+  font-weight: 600;
+  box-shadow: var(--shadow-accent-glow);
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 0 30px var(--color-accent-glow);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.625rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.badge-red {
+  background: var(--color-semantic-red-dim);
+  color: var(--color-semantic-red);
+}
+
+.badge-yellow {
+  background: var(--color-semantic-yellow-dim);
+  color: var(--color-semantic-yellow);
+}
+
+.badge-green {
+  background: var(--color-semantic-green-dim);
+  color: var(--color-semantic-green);
+}
+
+.badge-blue {
+  background: var(--color-semantic-blue-dim);
+  color: var(--color-semantic-blue);
+}
+
+.badge-purple {
+  background: var(--color-semantic-purple-dim);
+  color: var(--color-semantic-purple);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-navy);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-light);
+}
+
+/* Altitude indicators */
+.altitude-ground { color: var(--color-altitude-ground); }
+.altitude-50ft { color: var(--color-altitude-50ft); }
+.altitude-200ft { color: var(--color-altitude-200ft); }
+
+/* Completion flash animation */
+@keyframes completion-flash {
+  0% { border-color: var(--color-semantic-green); }
+  100% { border-color: var(--color-border); }
+}
+.animate-completion-flash {
+  animation: completion-flash 1s ease-out;
+}
+
+/* Pipeline station indicators */
+.station-capture { border-left: 3px solid var(--color-semantic-green); }
+.station-analyze { border-left: 3px solid var(--color-semantic-blue); }
+.station-decide { border-left: 3px solid var(--color-semantic-purple); }
+.station-communicate { border-left: 3px solid var(--color-accent); }
+
+/* ============================================
+   Reasoning Output — Markdown rendering
+   ============================================ */
+
+.reasoning-output {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+}
+
+.reasoning-engine-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-space-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  background: var(--color-accent-dim);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+  border-radius: var(--radius-pill);
+  padding: 3px 10px;
+  margin-bottom: 16px;
+}
+
+.reasoning-engine-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  animation: reasoning-pulse 2s ease-in-out infinite;
+}
+
+@keyframes reasoning-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.reasoning-h1 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 20px 0 8px 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.reasoning-h2 {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--color-accent);
+  margin: 18px 0 6px 0;
+}
+
+.reasoning-h3 {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 12px 0 4px 0;
+}
+
+.reasoning-p {
+  margin: 6px 0;
+}
+
+.reasoning-strong {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.reasoning-ul,
+.reasoning-ol {
+  margin: 6px 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.reasoning-ol {
+  counter-reset: reasoning-counter;
+}
+
+.reasoning-li {
+  position: relative;
+  padding-left: 18px;
+  margin: 3px 0;
+}
+
+.reasoning-ul > .reasoning-li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--color-accent);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.reasoning-ol > .reasoning-li {
+  counter-increment: reasoning-counter;
+}
+
+.reasoning-ol > .reasoning-li::before {
+  content: counter(reasoning-counter) ".";
+  position: absolute;
+  left: 0;
+  color: var(--color-accent);
+  font-family: var(--font-space-mono);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.reasoning-table-wrap {
+  overflow-x: auto;
+  margin: 10px 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.reasoning-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.reasoning-thead {
+  background: var(--color-surface);
+}
+
+.reasoning-th {
+  padding: 6px 10px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.reasoning-td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.reasoning-table tr:last-child .reasoning-td {
+  border-bottom: none;
+}
+
+.reasoning-blockquote {
+  border-left: 3px solid var(--color-accent);
+  background: var(--color-accent-dim);
+  margin: 10px 0;
+  padding: 8px 14px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.reasoning-blockquote .reasoning-p {
+  margin: 2px 0;
+}
+
+.reasoning-code-inline {
+  font-family: var(--font-space-mono);
+  font-size: 11px;
+  background: var(--color-surface);
+  color: var(--color-accent);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.reasoning-code-block {
+  font-family: var(--font-space-mono);
+  font-size: 11px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin: 10px 0;
+  overflow-x: auto;
+  color: var(--color-text-secondary);
+}
+
+.reasoning-hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 16px 0;
 }

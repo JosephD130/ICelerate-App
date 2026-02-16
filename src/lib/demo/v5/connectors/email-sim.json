@@ -1,0 +1,10 @@
+{
+  "emails": [
+    { "id": "em-001", "subject": "RE: Unmarked utility at STA 42+50", "from": "Torres, Maria <mtorres@riverside.gov>", "date": "2026-02-10T14:30:00Z", "hasAttachments": true, "linkedKeywords": ["STA 42+50", "utility conflict"] },
+    { "id": "em-002", "subject": "Phase 2 delay notification", "from": "Martinez, Carlos <cmartinez@acme-construction.com>", "date": "2026-02-09T09:15:00Z", "hasAttachments": false, "linkedKeywords": ["Phase 2", "delay"] },
+    { "id": "em-003", "subject": "CB-7 junction revision — engineer review", "from": "Torres, Maria <mtorres@riverside.gov>", "date": "2026-02-08T16:45:00Z", "hasAttachments": true, "linkedKeywords": ["CB-7", "design revision"] },
+    { "id": "em-004", "subject": "Type II diffuser spec — updated drawings attached", "from": "Kim, Sarah <skim@designpartners.com>", "date": "2026-02-07T11:00:00Z", "hasAttachments": true, "linkedKeywords": ["diffuser", "specification"] },
+    { "id": "em-005", "subject": "Weekly progress meeting notes (Feb 3)", "from": "Johnson, Mike <mjohnson@acme-construction.com>", "date": "2026-02-04T08:30:00Z", "hasAttachments": false, "linkedKeywords": ["progress", "schedule"] },
+    { "id": "em-006", "subject": "Notice of potential delay — utility relocation", "from": "County Utilities <utilities@riverside.gov>", "date": "2026-02-03T15:20:00Z", "hasAttachments": false, "linkedKeywords": ["utility", "delay", "notice"] }
+  ]
+}
