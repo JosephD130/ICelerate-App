@@ -1,13 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { X, Server, FileUp, Mail, Paperclip, Check, Building2, Globe, Shield } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { X, Server, FileUp, Mail, Paperclip, Check, Building2, Globe, Shield, Loader2 } from "lucide-react";
 import {
   loadProjectSystemPreview,
   loadEmailPreview,
   type SimObject,
   type SimEmail,
 } from "@/lib/connect/simulation";
+import { FLAGS } from "@/lib/flags";
+import { extractPdfText } from "@/lib/utils/pdf-extract";
+import { extractExcelText } from "@/lib/utils/excel-extract";
+import { chunkText } from "@/lib/utils/chunk-text";
+import { addChunks } from "@/lib/storage/document-store";
+import { refreshUploadedChunksCache } from "@/lib/demo/documents";
+import { useActiveProject } from "@/lib/contexts/project-context";
 
 type WizardTab = "api" | "files" | "email";
 
@@ -50,6 +57,36 @@ export default function ConnectionWizard({
   const [emailPreview, setEmailPreview] = useState<SimEmail[] | null>(null);
   const [apiConnected, setApiConnected] = useState(false);
   const [emailConnected, setEmailConnected] = useState(false);
+  const [processingSlot, setProcessingSlot] = useState<string | null>(null);
+  const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  const { activeProject } = useActiveProject();
+
+  const handleRealFileUpload = async (slotKey: string, file: File) => {
+    setProcessingSlot(slotKey);
+    try {
+      const slot = FILE_SLOTS.find((s) => s.key === slotKey);
+      if (!slot) return;
+
+      let text = "";
+      if (file.name.toLowerCase().endsWith(".pdf")) {
+        text = await extractPdfText(file);
+      } else {
+        text = await extractExcelText(file);
+      }
+
+      if (text) {
+        const chunks = chunkText(text, file.name, activeProject.id);
+        await addChunks(chunks);
+        await refreshUploadedChunksCache(activeProject.id);
+      }
+
+      onFileImport(slotKey, file.name);
+    } catch (err) {
+      console.error("File processing failed:", err);
+    } finally {
+      setProcessingSlot(null);
+    }
+  };
 
   useEffect(() => {
     if (open && activeTab === "api" && !apiPreview) {
@@ -248,6 +285,10 @@ export default function ConnectionWizard({
                 <div className="space-y-3">
                   {FILE_SLOTS.map((slot) => {
                     const imported = fileImports[slot.key];
+                    const isProcessing = processingSlot === slot.key;
+                    const acceptFilter = slot.ext === "pdf"
+                      ? ".pdf"
+                      : ".xlsx,.xls,.csv";
                     return (
                       <div
                         key={slot.key}
@@ -272,19 +313,38 @@ export default function ConnectionWizard({
                         <span className="text-[10px] font-data shrink-0" style={{ color: "var(--color-text-dim)" }}>
                           +{slot.coverageAdd}% coverage
                         </span>
-                        <button
-                          onClick={() => {
-                            const fakeName = `${slot.key}_${new Date().toISOString().slice(0, 10)}.${slot.ext}`;
-                            onFileImport(slot.key, fakeName);
+                        <input
+                          type="file"
+                          accept={acceptFilter}
+                          className="hidden"
+                          ref={(el) => { fileInputRefs.current[slot.key] = el; }}
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              if (FLAGS.realFileProcessing) {
+                                handleRealFileUpload(slot.key, file);
+                              } else {
+                                onFileImport(slot.key, file.name);
+                              }
+                            }
+                            e.target.value = "";
                           }}
+                        />
+                        <button
+                          onClick={() => fileInputRefs.current[slot.key]?.click()}
+                          disabled={isProcessing}
                           className="text-xs font-semibold px-3 py-1.5 rounded-[var(--radius-sm)] border transition-colors cursor-pointer"
                           style={{
                             borderColor: "var(--color-border)",
-                            color: imported ? "var(--color-text-muted)" : "var(--color-accent)",
+                            color: isProcessing ? "var(--color-text-dim)" : imported ? "var(--color-text-muted)" : "var(--color-accent)",
                             background: "var(--color-card)",
                           }}
                         >
-                          {imported ? "Replace" : "Choose file"}
+                          {isProcessing ? (
+                            <span className="flex items-center gap-1">
+                              <Loader2 size={12} className="animate-spin" /> Processing...
+                            </span>
+                          ) : imported ? "Replace" : "Choose file"}
                         </button>
                       </div>
                     );

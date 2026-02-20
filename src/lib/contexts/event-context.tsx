@@ -15,6 +15,13 @@ import { computeEventSync } from "@/lib/reality-sync/compute-sync";
 import { useActiveProject } from "./project-context";
 import { v5EventToDecisionEvent } from "@/lib/demo/v5/event-adapter";
 import { FLAGS } from "@/lib/flags";
+import {
+  putEvent,
+  putEvents,
+  getEventsByProject,
+  isProjectSeeded,
+  markProjectSeeded,
+} from "@/lib/storage/event-store";
 
 export type EventTab =
   | "overview"
@@ -57,10 +64,18 @@ const EventContext = createContext<EventContextValue | undefined>(undefined);
 // Mesa project uses the original rich demo events
 const MESA_PROJECT_ID = "p-mesa-stormdrain-2026";
 
+/** Fire-and-forget persist — errors logged but never block UI. */
+function persistEvent(projectId: string, event: DecisionEvent) {
+  if (!FLAGS.persistentEvents) return;
+  putEvent(projectId, event).catch((err) =>
+    console.error("[event-store] persist failed:", err)
+  );
+}
+
 export function EventProvider({ children }: { children: ReactNode }) {
   const { activeProject } = useActiveProject();
 
-  // Compute initial events based on active project
+  // Compute demo/default events for a project (used for seeding)
   const getProjectEvents = useCallback((): DecisionEvent[] => {
     if (activeProject.id === MESA_PROJECT_ID) {
       return demoDecisionEvents;
@@ -77,15 +92,51 @@ export function EventProvider({ children }: { children: ReactNode }) {
   const [pendingResolution, setPendingResolution] = useState<string | null>(null);
   const prevProjectId = useRef(activeProject.id);
 
-  // Reload events when project changes (skip reset on initial mount)
+  // ── Async hydration from IndexedDB ────────────────────────────
+  useEffect(() => {
+    if (!FLAGS.persistentEvents) return;
+
+    const projectId = activeProject.id;
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const seeded = await isProjectSeeded(projectId);
+        if (cancelled) return;
+
+        if (seeded) {
+          // Load persisted events
+          const stored = await getEventsByProject(projectId);
+          if (cancelled) return;
+          if (stored.length > 0) {
+            setEvents(stored);
+          }
+        } else {
+          // First load: seed demo events into IDB
+          const demoEvents = getProjectEvents();
+          await putEvents(projectId, demoEvents);
+          await markProjectSeeded(projectId);
+          // State already has demo events from useState init, no need to setEvents
+        }
+      } catch (err) {
+        console.error("[event-store] hydration failed:", err);
+      }
+    })();
+
+    return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeProject.id]);
+
+  // Reload events when project changes
   useEffect(() => {
     if (prevProjectId.current !== activeProject.id) {
       prevProjectId.current = activeProject.id;
+      // Set demo events immediately; hydration effect above will overwrite with persisted data
       setEvents(getProjectEvents());
       setActiveEventId(null);
       setActiveTab(defaultTab);
     }
-  }, [activeProject.id, getProjectEvents]);
+  }, [activeProject.id, getProjectEvents, defaultTab]);
 
   const activeEvent = activeEventId
     ? events.find((e) => e.id === activeEventId) ?? null
@@ -101,6 +152,7 @@ export function EventProvider({ children }: { children: ReactNode }) {
 
   const updateEvent = useCallback(
     (id: string, partial: Partial<DecisionEvent>) => {
+      const projectId = activeProject.id;
       setEvents((prev) =>
         prev.map((e) => {
           if (e.id !== id) return e;
@@ -111,38 +163,45 @@ export function EventProvider({ children }: { children: ReactNode }) {
           };
           // Recompute alignment status
           updated.alignmentStatus = computeEventSync(updated);
+          // Write-through to IndexedDB
+          persistEvent(projectId, updated);
           return updated;
         })
       );
     },
-    []
+    [activeProject.id]
   );
 
   const addHistory = useCallback(
     (id: string, entry: Omit<HistoryEntry, "timestamp">) => {
+      const projectId = activeProject.id;
       setEvents((prev) =>
-        prev.map((e) =>
-          e.id === id
-            ? {
-                ...e,
-                history: [
-                  ...e.history,
-                  { ...entry, timestamp: new Date().toISOString() },
-                ],
-                updatedAt: new Date().toISOString(),
-              }
-            : e
-        )
+        prev.map((e) => {
+          if (e.id !== id) return e;
+          const updated = {
+            ...e,
+            history: [
+              ...e.history,
+              { ...entry, timestamp: new Date().toISOString() },
+            ],
+            updatedAt: new Date().toISOString(),
+          };
+          // Write-through to IndexedDB
+          persistEvent(projectId, updated);
+          return updated;
+        })
       );
     },
-    []
+    [activeProject.id]
   );
 
   const createEvent = useCallback((event: DecisionEvent) => {
     setEvents((prev) => [event, ...prev]);
     setActiveEventId(event.id);
     setActiveTab(defaultTab);
-  }, [defaultTab]);
+    // Write-through to IndexedDB
+    persistEvent(activeProject.id, event);
+  }, [defaultTab, activeProject.id]);
 
   const resolveEvent = useCallback(
     (id: string) => {

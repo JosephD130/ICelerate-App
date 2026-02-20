@@ -1,9 +1,43 @@
+import { getChunksByProject, type StoredChunk } from "@/lib/storage/document-store";
+
 export interface DocumentChunk {
   id: string;
   title: string;
   section: string;
   content: string;
   keywords: string[];
+}
+
+// ── Uploaded document cache ──────────────────────────────────
+// In-memory cache of uploaded chunks from IndexedDB.
+// Refreshed on workspace mount and after each upload.
+
+let uploadedChunksCache: DocumentChunk[] = [];
+
+/** Reload uploaded chunks from IndexedDB into the in-memory cache. */
+export async function refreshUploadedChunksCache(
+  projectId: string,
+): Promise<void> {
+  if (typeof window === "undefined") return;
+  try {
+    const stored: StoredChunk[] = await getChunksByProject(projectId);
+    uploadedChunksCache = stored
+      .filter((c) => c.source === "uploaded")
+      .map((c) => ({
+        id: c.id,
+        title: c.title,
+        section: c.section,
+        content: c.content,
+        keywords: c.keywords,
+      }));
+  } catch {
+    uploadedChunksCache = [];
+  }
+}
+
+/** Get all documents: demo + uploaded. */
+export function getAllDocuments(): DocumentChunk[] {
+  return [...demoDocuments, ...uploadedChunksCache];
 }
 
 export const demoDocuments: DocumentChunk[] = [
@@ -142,7 +176,7 @@ export function searchDocuments(query: string): DocumentChunk[] {
   const queryLower = query.toLowerCase();
   const queryWords = queryLower.split(/\s+/).filter((w) => w.length > 2);
 
-  return demoDocuments
+  return getAllDocuments()
     .map((doc) => {
       let score = 0;
       const contentLower = doc.content.toLowerCase();

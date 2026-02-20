@@ -11,6 +11,7 @@ import {
   ChevronRight,
   ChevronDown,
   GanttChart,
+  BarChart3,
   PlugZap,
   ArrowLeft,
   Library,
@@ -54,6 +55,11 @@ const WORKSPACE_NAV: NavItem[] = [
     label: "Timeline",
     path: "/workspace/timeline",
     icon: <GanttChart size={18} />,
+  },
+  {
+    label: "Analytics",
+    path: "/workspace/analytics",
+    icon: <BarChart3 size={18} />,
   },
 ];
 

@@ -34,4 +34,9 @@ export const FLAGS = {
   governedRiskSystem: true,
   calibrationEngine: true,
   autoEvidenceLink: true,
+  realFileProcessing: true,
+  persistentEvents: true,
+  agenticWorkflows: true,
+  semanticSearch: true,
+  deadlineEngine: true,
 };

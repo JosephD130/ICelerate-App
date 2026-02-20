@@ -22,6 +22,7 @@ import { DEMO_DAILY_LOGS_V5 } from "@/lib/demo/v5/dailyLogs";
 import type { DriftSeverity } from "@/lib/reality-sync/drift-detector";
 import { computeTopRisk } from "@/lib/risk/top-risk";
 import { computeTrustStatus } from "@/components/trust/TrustBadge";
+import NotificationBell from "@/components/shared/NotificationBell";
 
 const STATUS_CONFIG: Record<DriftSeverity, { color: string; label: string }> = {
   synced: {
@@ -278,6 +279,7 @@ export default function RealitySyncPanel() {
               </button>
             ))}
           </div>
+          <NotificationBell />
           <ChevronDown
             size={14}
             className={`transition-transform text-[var(--color-text-dim)] ${expanded ? "rotate-180" : ""}`}

@@ -21,7 +21,7 @@ import type { TrustState } from "@/lib/models/decision-event";
 import { useActiveProject } from "@/lib/contexts/project-context";
 import { computeFreshnessBadge } from "@/lib/provenance/freshness";
 import { FLAGS } from "@/lib/flags";
-import { searchDocuments, demoDocuments } from "@/lib/demo/documents";
+import { searchDocuments, getAllDocuments } from "@/lib/demo/documents";
 import { matchNudges } from "@/lib/demo/long-term-memory";
 import { matchClauses, type ClauseMatch } from "@/lib/contract/clause-matcher";
 import { assessEntitlement } from "@/lib/contract/entitlement-rubric";
@@ -82,7 +82,7 @@ export default function ContractTab() {
 
   // Clause matching: ranked contract clause matches
   const clauseMatches: ClauseMatch[] = useMemo(
-    () => (FLAGS.clauseMatching ? matchClauses(eventSearchQuery, demoDocuments) : []),
+    () => (FLAGS.clauseMatching ? matchClauses(eventSearchQuery, getAllDocuments()) : []),
     [eventSearchQuery],
   );
 

@@ -1,33 +1,86 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import {
   FileText,
   Search,
   Upload,
   BookOpen,
   Hash,
+  Loader2,
+  Trash2,
 } from "lucide-react";
 import SectionTitle from "@/components/shared/SectionTitle";
-import { demoDocuments, searchDocuments } from "@/lib/demo/documents";
+import { getAllDocuments, searchDocuments, refreshUploadedChunksCache } from "@/lib/demo/documents";
+import { FLAGS } from "@/lib/flags";
+import { extractPdfText } from "@/lib/utils/pdf-extract";
+import { extractExcelText } from "@/lib/utils/excel-extract";
+import { chunkText } from "@/lib/utils/chunk-text";
+import { addChunks, deleteByFile } from "@/lib/storage/document-store";
+import { useActiveProject } from "@/lib/contexts/project-context";
 
 const DOC_GROUPS = [
   { title: "General Conditions", prefix: "gc-", color: "var(--color-semantic-blue)" },
   { title: "Special Provisions", prefix: "sp-", color: "var(--color-semantic-purple)" },
   { title: "Technical Specifications", prefix: "ts-", color: "var(--color-semantic-green)" },
   { title: "Project Schedule", prefix: "sch-", color: "var(--color-semantic-yellow)" },
+  { title: "Uploaded Documents", prefix: "upload-", color: "var(--color-accent)" },
 ];
 
 export default function DocumentsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [, setRefreshKey] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { activeProject } = useActiveProject();
 
+  const allDocs = useMemo(() => getAllDocuments(), []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const filteredDocs = useMemo(() => {
-    if (!searchQuery.trim()) return demoDocuments;
+    const docs = getAllDocuments();
+    if (!searchQuery.trim()) return docs;
     return searchDocuments(searchQuery);
   }, [searchQuery]);
 
-  const activeDoc = demoDocuments.find((d) => d.id === selectedDoc);
+  const activeDoc = getAllDocuments().find((d) => d.id === selectedDoc);
+
+  const handleUpload = async (file: File) => {
+    if (!FLAGS.realFileProcessing) return;
+    setIsUploading(true);
+    try {
+      let text = "";
+      if (file.name.toLowerCase().endsWith(".pdf")) {
+        text = await extractPdfText(file);
+      } else {
+        text = await extractExcelText(file);
+      }
+
+      if (text) {
+        const chunks = chunkText(text, file.name, activeProject.id);
+        await addChunks(chunks);
+        await refreshUploadedChunksCache(activeProject.id);
+        setRefreshKey((k) => k + 1);
+      }
+    } catch (err) {
+      console.error("Upload failed:", err);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleDeleteUploaded = async (docId: string) => {
+    const doc = getAllDocuments().find((d) => d.id === docId);
+    if (!doc) return;
+    // Extract filename from the chunk ID pattern: upload-{hash}-{index}
+    // We need to find all chunks with the same prefix
+    const prefix = docId.replace(/-\d+$/, "");
+    const fileName = doc.title.replace("Uploaded: ", "").replace(/ /g, "_");
+    await deleteByFile(activeProject.id, fileName);
+    await refreshUploadedChunksCache(activeProject.id);
+    setSelectedDoc(null);
+    setRefreshKey((k) => k + 1);
+  };
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -42,13 +95,37 @@ export default function DocumentsPage() {
               Documents
             </h1>
             <p className="text-sm text-[var(--color-text-muted)]">
-              {demoDocuments.length} document sections loaded in context
+              {getAllDocuments().length} document sections loaded in context
             </p>
           </div>
         </div>
-        <button className="btn-primary flex items-center gap-2 text-sm opacity-50 cursor-not-allowed">
-          <Upload size={16} />
-          Upload Document
+        <input
+          type="file"
+          accept=".pdf,.xlsx,.xls,.csv"
+          className="hidden"
+          ref={fileInputRef}
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) handleUpload(file);
+            e.target.value = "";
+          }}
+        />
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          disabled={isUploading}
+          className="btn-primary flex items-center gap-2 text-sm"
+        >
+          {isUploading ? (
+            <>
+              <Loader2 size={16} className="animate-spin" />
+              Processing...
+            </>
+          ) : (
+            <>
+              <Upload size={16} />
+              Upload Document
+            </>
+          )}
         </button>
       </div>
 
@@ -104,6 +181,14 @@ export default function DocumentsPage() {
                       <div className="text-xs text-[var(--color-text-dim)] mt-0.5 flex items-center gap-1">
                         <Hash size={8} />
                         {doc.id}
+                        {doc.id.startsWith("upload-") && (
+                          <span
+                            className="ml-1 px-1.5 py-0.5 rounded-full text-[9px] font-semibold"
+                            style={{ background: "var(--color-accent-dim)", color: "var(--color-accent)" }}
+                          >
+                            UPLOADED
+                          </span>
+                        )}
                       </div>
                     </button>
                   ))}
@@ -118,7 +203,18 @@ export default function DocumentsPage() {
           {activeDoc ? (
             <>
               <div className="mb-4 pb-3 border-b border-[var(--color-border)]">
-                <SectionTitle>{activeDoc.title}</SectionTitle>
+                <div className="flex items-center justify-between">
+                  <SectionTitle>{activeDoc.title}</SectionTitle>
+                  {activeDoc.id.startsWith("upload-") && (
+                    <button
+                      onClick={() => handleDeleteUploaded(activeDoc.id)}
+                      className="flex items-center gap-1 text-xs px-2 py-1 rounded-[var(--radius-sm)] transition-colors hover:bg-[var(--color-semantic-red-dim)]"
+                      style={{ color: "var(--color-semantic-red)" }}
+                    >
+                      <Trash2 size={12} /> Delete
+                    </button>
+                  )}
+                </div>
                 <h2 className="text-sm font-semibold text-[var(--color-text-primary)] mt-2">
                   {activeDoc.section}
                 </h2>
@@ -130,6 +226,17 @@ export default function DocumentsPage() {
                   <span className="text-xs font-data text-[var(--color-text-dim)]">
                     {activeDoc.keywords.length} keywords
                   </span>
+                  {activeDoc.id.startsWith("upload-") && (
+                    <>
+                      <span className="text-xs text-[var(--color-text-dim)]">·</span>
+                      <span
+                        className="px-1.5 py-0.5 rounded-full text-[9px] font-semibold"
+                        style={{ background: "var(--color-accent-dim)", color: "var(--color-accent)" }}
+                      >
+                        UPLOADED
+                      </span>
+                    </>
+                  )}
                 </div>
               </div>
 

@@ -30,6 +30,7 @@ import AuditLogMode from "@/components/events/modes/AuditLogMode";
 import { FLAGS } from "@/lib/flags";
 import { T } from "@/lib/terminology";
 import { generateFriendlyLabel, copyRawIdToClipboard } from "@/lib/models/event-labels";
+import PipelinePanel from "@/components/pipeline/PipelinePanel";
 
 export default function EventWorkspacePage() {
   const params = useParams();
@@ -122,6 +123,9 @@ export default function EventWorkspacePage() {
         </div>
         <NoticeClockBadge event={activeEvent} compact />
       </div>
+
+      {/* Agentic Pipeline */}
+      {FLAGS.agenticWorkflows && <PipelinePanel />}
 
       {/* Causal strip — persistent across all tabs (legacy only) */}
       {!FLAGS.governedRiskSystem && <CausalStrip />}

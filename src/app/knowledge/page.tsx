@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
@@ -18,7 +18,15 @@ import {
   FileUp,
   FileText,
   Sheet,
+  Loader2,
+  Upload,
 } from "lucide-react";
+import { FLAGS } from "@/lib/flags";
+import { extractPdfText } from "@/lib/utils/pdf-extract";
+import { extractExcelText } from "@/lib/utils/excel-extract";
+import { chunkText } from "@/lib/utils/chunk-text";
+import { addChunks } from "@/lib/storage/document-store";
+import { refreshUploadedChunksCache } from "@/lib/demo/documents";
 import { MemoryStore } from "@/lib/memory/store";
 import { seedGlobalMemory } from "@/lib/demo/v5/memory-seed";
 import {
@@ -28,6 +36,7 @@ import {
 import type { CaseRecord, LessonRecord } from "@/lib/memory/types";
 import { T } from "@/lib/terminology";
 import { APP_VERSION } from "@/lib/version";
+import { useActiveProject } from "@/lib/contexts/project-context";
 
 /* ── helpers ─────────────────────────────────────────────── */
 
@@ -169,11 +178,13 @@ function ImportModal({
   onClose,
   onImportDemo,
   onAddManual,
+  projectId,
 }: {
   open: boolean;
   onClose: () => void;
   onImportDemo: () => void;
   onAddManual: (data: Partial<CaseRecord>) => void;
+  projectId: string;
 }) {
   const [tab, setTab] = useState<"demo" | "upload" | "manual">("demo");
   const [title, setTitle] = useState("");
@@ -184,6 +195,51 @@ function ImportModal({
   const [cost, setCost] = useState("");
   const [days, setDays] = useState("");
   const [tags, setTags] = useState("");
+  const [isProcessingFile, setIsProcessingFile] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleFileUpload = async (file: File) => {
+    if (!FLAGS.realFileProcessing) {
+      onAddManual({
+        title: `Imported — ${file.name}`,
+        issueType: "imported",
+        summary: `Imported from uploaded file (${file.name}). Review and edit details.`,
+        outcome: "Pending review",
+        tags: ["imported", file.name.split(".").pop()?.toLowerCase() || "file"],
+      });
+      onClose();
+      return;
+    }
+
+    setIsProcessingFile(true);
+    try {
+      let text = "";
+      if (file.name.toLowerCase().endsWith(".pdf")) {
+        text = await extractPdfText(file);
+      } else {
+        text = await extractExcelText(file);
+      }
+
+      if (text) {
+        const chunks = chunkText(text, file.name, projectId);
+        await addChunks(chunks);
+        await refreshUploadedChunksCache(projectId);
+
+        onAddManual({
+          title: `Imported — ${file.name}`,
+          issueType: "imported",
+          summary: text.slice(0, 500) + (text.length > 500 ? "..." : ""),
+          outcome: `${chunks.length} document sections extracted and indexed for RAG context.`,
+          tags: ["imported", file.name.split(".").pop()?.toLowerCase() || "file"],
+        });
+      }
+      onClose();
+    } catch (err) {
+      console.error("File processing failed:", err);
+    } finally {
+      setIsProcessingFile(false);
+    }
+  };
 
   if (!open) return null;
 
@@ -249,41 +305,61 @@ function ImportModal({
             ) : tab === "upload" ? (
               <div className="space-y-4">
                 <p className="text-sm text-[var(--color-text-secondary)]">
-                  Upload case files from previous projects. Supported formats: PDF reports, Excel spreadsheets, and CSV exports.
+                  Upload case files from previous projects. Files are parsed, chunked, and indexed for RAG context across all tools.
                 </p>
-                <div className="grid grid-cols-3 gap-3">
-                  {([
-                    { ext: "PDF", icon: FileText, label: "PDF Report", fake: "Case_Report_2025.pdf" },
-                    { ext: "XLSX", icon: Sheet, label: "Excel Workbook", fake: "Lessons_Learned_Log.xlsx" },
-                    { ext: "CSV", icon: FileUp, label: "CSV Export", fake: "Risk_Register_Export.csv" },
-                  ] as const).map((fmt) => {
-                    const Icon = fmt.icon;
-                    return (
-                      <button
-                        key={fmt.ext}
-                        onClick={() => {
-                          onAddManual({
-                            title: `Imported — ${fmt.fake}`,
-                            issueType: "imported",
-                            summary: `Imported from uploaded file (${fmt.fake}). Review and edit details to match your project records.`,
-                            outcome: "Pending review",
-                            tags: ["imported", fmt.ext.toLowerCase()],
-                          });
-                          onClose();
-                        }}
-                        className="flex flex-col items-center gap-2 p-4 rounded-[var(--radius-sm)] border transition-all cursor-pointer hover:border-[var(--color-accent)]/40 hover:bg-[var(--color-surface)]"
-                        style={{ borderColor: "var(--color-border)", background: "var(--color-surface)" }}
-                      >
-                        <Icon size={24} style={{ color: "var(--color-accent)" }} />
-                        <span className="text-xs font-semibold" style={{ color: "var(--color-text-primary)" }}>{fmt.ext}</span>
-                        <span className="text-[10px]" style={{ color: "var(--color-text-dim)" }}>{fmt.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-                <p className="text-[11px] text-center" style={{ color: "var(--color-text-dim)" }}>
-                  Click a format to simulate importing a case file
-                </p>
+                <input
+                  type="file"
+                  accept=".pdf,.xlsx,.xls,.csv"
+                  className="hidden"
+                  ref={fileInputRef}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleFileUpload(file);
+                    e.target.value = "";
+                  }}
+                />
+                {isProcessingFile ? (
+                  <div className="flex flex-col items-center gap-3 py-8">
+                    <Loader2 size={28} className="animate-spin" style={{ color: "var(--color-accent)" }} />
+                    <p className="text-sm" style={{ color: "var(--color-text-muted)" }}>Extracting and indexing document...</p>
+                  </div>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      className="w-full flex flex-col items-center gap-3 p-8 rounded-[var(--radius-sm)] border-2 border-dashed transition-all cursor-pointer hover:border-[var(--color-accent)]/40 hover:bg-[var(--color-surface)]"
+                      style={{ borderColor: "var(--color-border)", background: "var(--color-surface)" }}
+                    >
+                      <Upload size={28} style={{ color: "var(--color-accent)" }} />
+                      <span className="text-sm font-medium" style={{ color: "var(--color-text-primary)" }}>
+                        Click to select a file
+                      </span>
+                      <span className="text-[11px]" style={{ color: "var(--color-text-dim)" }}>
+                        PDF, Excel (.xlsx), or CSV
+                      </span>
+                    </button>
+                    <div className="grid grid-cols-3 gap-3">
+                      {([
+                        { ext: "PDF", icon: FileText, label: "PDF Report" },
+                        { ext: "XLSX", icon: Sheet, label: "Excel Workbook" },
+                        { ext: "CSV", icon: FileUp, label: "CSV Export" },
+                      ] as const).map((fmt) => {
+                        const Icon = fmt.icon;
+                        return (
+                          <div
+                            key={fmt.ext}
+                            className="flex flex-col items-center gap-1 p-3 rounded-[var(--radius-sm)] border"
+                            style={{ borderColor: "var(--color-border)", background: "var(--color-surface)" }}
+                          >
+                            <Icon size={18} style={{ color: "var(--color-text-dim)" }} />
+                            <span className="text-[10px] font-semibold" style={{ color: "var(--color-text-muted)" }}>{fmt.ext}</span>
+                            <span className="text-[9px]" style={{ color: "var(--color-text-dim)" }}>{fmt.label}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
               </div>
             ) : (
               <>
@@ -447,6 +523,7 @@ function InputField({
 
 export default function KnowledgeLibraryPage() {
   const router = useRouter();
+  const { activeProject } = useActiveProject();
   const [cases, setCases] = useState<CaseRecord[]>([]);
   const [lessons, setLessons] = useState<LessonRecord[]>([]);
   const [store] = useState(() => new MemoryStore());
@@ -681,6 +758,7 @@ export default function KnowledgeLibraryPage() {
         onClose={() => setImportOpen(false)}
         onImportDemo={handleImportDemo}
         onAddManual={handleAddManualCase}
+        projectId={activeProject.id}
       />
       <AddLessonModal
         open={lessonOpen}
