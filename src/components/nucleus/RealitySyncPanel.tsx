@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import {
   ChevronDown,
+  Menu,
   Radio,
   FileText,
   Building2,
@@ -51,7 +52,7 @@ const ROLE_LABELS: Record<Role, { label: string; icon: React.ReactNode }> = {
   stakeholder: { label: "Exec", icon: <Users size={12} /> },
 };
 
-export default function RealitySyncPanel() {
+export default function RealitySyncPanel({ onMenuClick }: { onMenuClick?: () => void }) {
   const { events, activeEvent, selectEvent } = useEvents();
   const { role, setRole } = useRole();
   const { activeProject } = useActiveProject();
@@ -151,6 +152,14 @@ export default function RealitySyncPanel() {
         }}
         className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-medium cursor-pointer bg-[var(--color-card)]"
       >
+        {/* Mobile hamburger — only visible on small screens */}
+        <button
+          className="md:hidden p-1.5 -ml-1 rounded-[var(--radius-sm)] text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors shrink-0"
+          onClick={(e) => { e.stopPropagation(); onMenuClick?.(); }}
+          aria-label="Open navigation menu"
+        >
+          <Menu size={18} />
+        </button>
         {activeEvent ? (
           <>
             {/* ── Mode B: Active event selected ── */}
@@ -170,7 +179,7 @@ export default function RealitySyncPanel() {
             </span>
 
             {/* Center: cost / schedule / critical path + top risk */}
-            <div className="flex items-center gap-2 text-xs font-data text-[var(--color-text-muted)]">
+            <div className="hidden sm:flex items-center gap-2 text-xs font-data text-[var(--color-text-muted)]">
               {activeEvent.costImpact && (
                 <>
                   <span className="text-[var(--color-accent)]">
@@ -200,7 +209,7 @@ export default function RealitySyncPanel() {
 
             {/* Top risk */}
             <span
-              className={`text-xs truncate max-w-[180px] text-[var(--color-text-muted)] ${
+              className={`hidden sm:inline text-xs truncate max-w-[180px] text-[var(--color-text-muted)] ${
                 topRisk.reasonCode === "notice_clock" || topRisk.reasonCode === "overdue"
                   ? "font-semibold"
                   : "font-medium"
@@ -228,7 +237,7 @@ export default function RealitySyncPanel() {
 
             {/* Top risk microcopy */}
             <span
-              className={`text-xs truncate max-w-[200px] text-[var(--color-text-muted)] ${
+              className={`hidden sm:inline text-xs truncate max-w-[200px] text-[var(--color-text-muted)] ${
                 topRisk.reasonCode === "notice_clock" || topRisk.reasonCode === "overdue"
                   ? "font-semibold"
                   : "font-medium"
@@ -275,7 +284,7 @@ export default function RealitySyncPanel() {
                 aria-label={`Switch to ${ROLE_LABELS[r].label} role`}
               >
                 {ROLE_LABELS[r].icon}
-                {ROLE_LABELS[r].label}
+                <span className="hidden sm:inline">{ROLE_LABELS[r].label}</span>
               </button>
             ))}
           </div>

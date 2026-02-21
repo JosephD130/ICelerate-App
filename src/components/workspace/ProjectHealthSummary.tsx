@@ -92,8 +92,8 @@ export default function ProjectHealthSummary({
           visibleCount === 1
             ? "grid-cols-1 max-w-sm"
             : visibleCount === 2
-              ? "grid-cols-2"
-              : "grid-cols-3"
+              ? "grid-cols-1 sm:grid-cols-2"
+              : "grid-cols-1 sm:grid-cols-3"
         }`}
       >
         {/* Exposure at Risk */}

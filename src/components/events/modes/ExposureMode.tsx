@@ -43,7 +43,7 @@ export default function ExposureMode() {
   if (!activeEvent) return null;
 
   return (
-    <div className="grid grid-cols-2 gap-6 max-w-4xl">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
       {/* Cost Impact */}
       <div className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-[var(--radius-card)] p-5">
         <SectionTitle icon={<DollarSign size={12} />}>Cost Impact</SectionTitle>

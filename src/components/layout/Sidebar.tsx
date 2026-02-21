@@ -84,10 +84,11 @@ const DELIVER_NAV: NavItem[] = [
   },
 ];
 
-function NavLink({ item, isActive }: { item: NavItem; isActive: boolean }) {
+function NavLink({ item, isActive, onClick }: { item: NavItem; isActive: boolean; onClick?: () => void }) {
   return (
     <Link
       href={item.path}
+      onClick={onClick}
       className={`flex items-center gap-3 px-3 py-3 rounded-[var(--radius-sm)] text-sm transition-all ${
         isActive
           ? "bg-slate-800 text-white"
@@ -221,12 +222,16 @@ function ProjectSelector() {
   );
 }
 
-export default function Sidebar() {
+export default function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const pathname = usePathname();
   const { activeEvent, selectEvent } = useEvents();
 
   return (
-    <aside role="navigation" aria-label="Main navigation" className="relative z-50 w-[270px] h-screen flex flex-col bg-[var(--color-navy-light)] border-r border-[var(--color-border)] shrink-0">
+    <aside
+      role="navigation"
+      aria-label="Main navigation"
+      className={`fixed md:static inset-y-0 left-0 z-50 w-[270px] h-screen flex flex-col bg-[var(--color-navy-light)] border-r border-[var(--color-border)] shrink-0 transition-transform duration-200 ease-in-out ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+    >
       {/* Logo */}
       <div className="px-4 py-4 border-b border-[var(--color-border)]">
         <Link href="/workspace" className="flex items-center gap-2">
@@ -273,6 +278,7 @@ export default function Sidebar() {
               key={item.path}
               item={item}
               isActive={pathname === item.path}
+              onClick={onClose}
             />
           ))}
         </nav>
@@ -287,6 +293,7 @@ export default function Sidebar() {
               key={item.path}
               item={item}
               isActive={pathname === item.path}
+              onClick={onClose}
             />
           ))}
         </nav>
@@ -301,6 +308,7 @@ export default function Sidebar() {
               key={item.path}
               item={item}
               isActive={pathname === item.path}
+              onClick={onClose}
             />
           ))}
         </nav>
@@ -315,6 +323,7 @@ export default function Sidebar() {
               <NavLink
                 item={{ label: T.KNOWLEDGE_LIBRARY, path: "/knowledge", icon: <Library size={18} /> }}
                 isActive={pathname === "/knowledge"}
+                onClick={onClose}
               />
             </nav>
           </>

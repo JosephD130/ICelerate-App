@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "@/components/layout/Sidebar";
 import RealitySyncPanel from "@/components/nucleus/RealitySyncPanel";
 import { EventProvider } from "@/lib/contexts/event-context";
@@ -13,6 +13,7 @@ import ToastStack from "@/components/shared/ToastStack";
 
 function WorkspaceInner({ children }: { children: React.ReactNode }) {
   const { activeProject } = useActiveProject();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     refreshUploadedChunksCache(activeProject.id);
@@ -24,10 +25,18 @@ function WorkspaceInner({ children }: { children: React.ReactNode }) {
         Skip to content
       </a>
       <div className="flex h-screen overflow-hidden">
-        <Sidebar />
+        {/* Mobile backdrop */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 z-40 bg-black/50 md:hidden"
+            onClick={() => setSidebarOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+        <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <div className="flex-1 flex flex-col overflow-hidden light-content bg-[var(--color-navy)]">
-          <RealitySyncPanel />
-          <main id="main" className="flex-1 overflow-y-auto p-3 md:p-6">{children}</main>
+          <RealitySyncPanel onMenuClick={() => setSidebarOpen((p) => !p)} />
+          <main id="main" className="flex-1 overflow-y-auto p-3 md:p-6 min-w-0">{children}</main>
         </div>
       </div>
     </>

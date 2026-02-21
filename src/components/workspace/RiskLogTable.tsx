@@ -128,7 +128,7 @@ export default function RiskLogTable({ drillDown = null }: Props) {
   return (
     <div>
       {/* Toolbar */}
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-4">
         <div className="relative flex-1 max-w-sm">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-dim)] opacity-50" />
           <input
@@ -156,7 +156,8 @@ export default function RiskLogTable({ drillDown = null }: Props) {
 
       {/* Table */}
       <div className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-[var(--radius-card)] overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full text-sm min-w-[700px]">
           <thead>
             <tr className="border-b border-[var(--color-border)]">
               {([
@@ -243,6 +244,7 @@ export default function RiskLogTable({ drillDown = null }: Props) {
             )}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Event Drawer */}

@@ -80,7 +80,7 @@ export default function SummaryMode() {
         )}
 
         {/* Impact cards */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Cost */}
           <div className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-[var(--radius-card)] p-4">
             <div className="flex items-center gap-2 mb-2">

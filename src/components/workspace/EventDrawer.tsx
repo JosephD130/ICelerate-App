@@ -52,13 +52,17 @@ export default function EventDrawer({
       {/* Panel */}
       <div
         data-testid="event-drawer-panel"
-        className="fixed right-0 top-0 z-50 h-full w-[380px] flex flex-col transition-transform duration-200 ease-in-out"
+        className="fixed right-0 top-0 z-50 h-full w-full sm:w-[380px] flex flex-col transition-transform duration-200 ease-in-out"
         style={{
           background: "var(--color-card)",
           borderLeft: "1px solid var(--color-border)",
           transform: open ? "translateX(0)" : "translateX(100%)",
         }}
       >
+        {/* Mobile drag handle */}
+        <div className="sm:hidden flex justify-center pt-2.5 pb-1 shrink-0">
+          <div className="w-10 h-1 rounded-full bg-[var(--color-border)]" />
+        </div>
         {!event ? (
           <div className="flex-1 flex items-center justify-center text-sm text-[var(--color-text-muted)]">
             No risk item selected

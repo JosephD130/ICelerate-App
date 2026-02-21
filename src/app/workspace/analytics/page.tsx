@@ -115,7 +115,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Summary stats row */}
-      <div className="grid grid-cols-4 gap-3 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         {[
           {
             label: "Total Exposure",
@@ -161,7 +161,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Charts grid */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Cost Exposure Over Time */}
         <ChartCard
           title="Cost Exposure"

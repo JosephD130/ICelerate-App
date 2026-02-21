@@ -121,7 +121,7 @@ export default function OverviewTab() {
       </div>
 
       {/* Metrics row */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Cost exposure */}
         <div className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-[var(--radius-card)] p-4">
           <div className="flex items-center gap-2 mb-2">
@@ -217,7 +217,7 @@ export default function OverviewTab() {
       </div>
 
       {/* Action buttons */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {actionButtons.map((btn) => (
           <button
             key={btn.tab}

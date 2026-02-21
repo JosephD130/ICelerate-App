@@ -309,9 +309,9 @@ export default function AlignmentRegisterPage() {
   return (
     <div className="max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-[var(--radius-sm)] flex items-center justify-center bg-[var(--color-accent-dim)] text-[var(--color-accent)]">
+          <div className="w-11 h-11 rounded-[var(--radius-sm)] flex items-center justify-center bg-[var(--color-accent-dim)] text-[var(--color-accent)] shrink-0">
             <Shield size={22} />
           </div>
           <div>
@@ -509,7 +509,7 @@ export default function AlignmentRegisterPage() {
 
           {/* Search + Filters (hidden for exec role) */}
           {policy.showOperationalFilters && (
-            <div className="flex items-center gap-3 mb-5">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-5">
               <div className="relative flex-1 max-w-sm">
                 <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-dim)] opacity-50" />
                 <input

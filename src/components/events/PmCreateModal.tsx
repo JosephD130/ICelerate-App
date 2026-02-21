@@ -227,8 +227,12 @@ export default function PmCreateModal({ open, onClose, onCreated }: Props) {
   return (
     <>
       <div className="fixed inset-0 z-40 bg-black/50" onClick={onClose} />
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-[var(--radius-card)] w-full max-w-lg shadow-2xl max-h-[90vh] flex flex-col">
+      <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-t-[20px] sm:rounded-[var(--radius-card)] w-full sm:max-w-lg shadow-2xl max-h-[90vh] flex flex-col">
+          {/* Mobile drag handle */}
+          <div className="sm:hidden flex justify-center pt-2.5 pb-1 shrink-0">
+            <div className="w-10 h-1 rounded-full bg-[var(--color-border)]" />
+          </div>
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--color-border)] shrink-0">
             <div className="text-sm font-semibold text-[var(--color-text-primary)]">

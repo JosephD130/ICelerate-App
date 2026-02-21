@@ -245,7 +245,7 @@ export default function DecisionTab() {
         </div>
       )}
 
-      <div className="grid grid-cols-[1fr_auto] gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 mb-6">
         <div className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-[var(--radius-card)] p-4">
           <SectionTitle>Field Condition / Issue</SectionTitle>
           <textarea value={input} onChange={(e) => setInput(e.target.value)} className="w-full h-28 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-input)] p-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-dim)] resize-none focus:border-[var(--color-accent)] focus:outline-none" placeholder="Enter a field condition, issue, or decision point..." />
@@ -260,7 +260,7 @@ export default function DecisionTab() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {panels.map((panel) => {
           const persona = personas.find((p) => p.id === panel.id);
           const panelComplete = !panel.isStreaming && panel.text && !panel.error;
