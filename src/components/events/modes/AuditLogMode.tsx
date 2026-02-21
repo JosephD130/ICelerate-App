@@ -21,7 +21,8 @@ export default function AuditLogMode() {
       </div>
 
       <div className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-[var(--radius-card)] overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full text-sm min-w-[500px]">
           <thead>
             <tr className="border-b border-[var(--color-border)]">
               <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-[1px] text-[var(--color-text-muted)]">
@@ -70,6 +71,7 @@ export default function AuditLogMode() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

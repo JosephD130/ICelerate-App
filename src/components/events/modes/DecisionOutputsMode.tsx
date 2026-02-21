@@ -110,7 +110,7 @@ export default function DecisionOutputsMode() {
   if (!activeEvent) return null;
 
   return (
-    <div className="grid grid-cols-[1fr_1.2fr] gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-[1fr_1.2fr] gap-6">
       {/* Left — Outputs + Checklist */}
       <div className="space-y-4">
         {/* Context Readiness */}

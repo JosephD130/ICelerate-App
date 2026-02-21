@@ -142,7 +142,7 @@ export default function ContractMode() {
   if (!activeEvent) return null;
 
   return (
-    <div className="grid grid-cols-[1fr_1.2fr] gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-[1fr_1.2fr] gap-6">
       <div className="space-y-4">
         {/* Notice section for notice-contract events */}
         {activeEvent.eventType === "notice-contract" && activeEvent.noticeDeadline && (
@@ -182,7 +182,7 @@ export default function ContractMode() {
           </div>
           <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="w-full h-32 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-input)] p-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-dim)] resize-none focus:border-[var(--color-semantic-blue)] focus:outline-none" placeholder="Describe the field condition or contract question..." />
           {!description.trim() && <button onClick={loadDemo} className="flex items-center gap-1.5 mt-2 text-sm text-[var(--color-semantic-blue)] hover:text-[var(--color-text-primary)] transition-colors"><Beaker size={12} /> Load demo scenario</button>}
-          <div className="grid grid-cols-2 gap-3 mt-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
             <div>
               <label className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider block mb-1">Location</label>
               <div className="relative">

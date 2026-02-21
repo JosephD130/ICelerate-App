@@ -47,7 +47,7 @@ export default function SummaryMode() {
 
   return (
     <>
-    <div className="grid grid-cols-[1fr_280px] gap-6 mt-4">
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6 mt-4">
       {/* Main content */}
       <div className="space-y-5">
         {/* Description */}

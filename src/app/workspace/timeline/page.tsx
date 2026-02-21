@@ -223,12 +223,12 @@ function TimelineContent() {
   }, [sortedPhases, tasksByPhase, milestones, collapsed]);
 
   const ROW_HEIGHT = 36;
-  const LABEL_WIDTH = 260;
+  const LABEL_WIDTH = typeof window !== "undefined" && window.innerWidth < 640 ? 140 : 260;
 
   return (
     <div className="max-w-full mx-auto">
       {/* ---- Header ---- */}
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
         <div className="flex items-center gap-3">
           <div
             className="w-10 h-10 rounded-[var(--radius-sm)] flex items-center justify-center"

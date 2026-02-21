@@ -178,7 +178,7 @@ export default function MonitorTab() {
   if (!activeEvent) return null;
 
   return (
-    <div className="grid grid-cols-[1fr_1.2fr] gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-[1fr_1.2fr] gap-6">
       <div className="space-y-4">
         <div className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-[var(--radius-card)] p-4">
           <SectionTitle>Event Status Summary</SectionTitle>

@@ -143,7 +143,7 @@ export default function DocumentsPage() {
         />
       </div>
 
-      <div className="grid grid-cols-[300px_1fr] gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6">
         {/* Left — Document list */}
         <div className="space-y-4 max-h-[calc(100vh-220px)] overflow-y-auto">
           {DOC_GROUPS.map((group) => {

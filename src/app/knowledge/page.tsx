@@ -338,7 +338,7 @@ function ImportModal({
                         PDF, Excel (.xlsx), or CSV
                       </span>
                     </button>
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                       {([
                         { ext: "PDF", icon: FileText, label: "PDF Report" },
                         { ext: "XLSX", icon: Sheet, label: "Excel Workbook" },
@@ -367,11 +367,11 @@ function ImportModal({
                 <InputField label="Issue Type" value={issueType} onChange={setIssueType} placeholder="e.g. quality, utility, notice" />
                 <InputField label="Summary" value={summary} onChange={setSummary} placeholder="What happened?" multiline />
                 <InputField label="Outcome" value={outcome} onChange={setOutcome} placeholder="How was it resolved?" multiline />
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <InputField label="Clauses (comma-separated)" value={clauses} onChange={setClauses} placeholder="§4.3.1, §7.3.1" />
                   <InputField label="Tags (comma-separated)" value={tags} onChange={setTags} placeholder="utility, rework" />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <InputField label="Final Cost ($)" value={cost} onChange={setCost} placeholder="0" type="number" />
                   <InputField label="Schedule Days" value={days} onChange={setDays} placeholder="0" type="number" />
                 </div>
@@ -665,7 +665,7 @@ export default function KnowledgeLibraryPage() {
         </div>
 
         {/* Metrics row */}
-        <div className="grid grid-cols-2 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <div
             className="rounded-[var(--radius-card)] border p-5"
             style={{ background: "var(--color-card)", borderColor: "var(--color-border)" }}

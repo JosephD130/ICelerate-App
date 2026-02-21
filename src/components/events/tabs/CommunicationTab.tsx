@@ -180,7 +180,7 @@ export default function CommunicationTab() {
   if (!activeEvent) return null;
 
   return (
-    <div className="grid grid-cols-[1fr_1.2fr] gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-[1fr_1.2fr] gap-6">
       <div className="space-y-4">
         <div className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-[var(--radius-card)] p-4">
           <SectionTitle>Audience Preset</SectionTitle>
@@ -209,7 +209,7 @@ export default function CommunicationTab() {
           {showAdvanced && (
             <div className="px-4 pb-4 space-y-4">
               <div><SectionTitle>Tone Calibration</SectionTitle><ToneSliders settings={tone} onChange={setTone} /></div>
-              <div><SectionTitle>Target Persona</SectionTitle><div className="grid grid-cols-2 gap-2">{personas.map((p) => (<PersonaCard key={p.id} persona={p} selected={selectedPersona === p.id} onSelect={() => { setSelectedPersona(p.id); setRoom(p.defaultRoom); setTone((prev) => ({ ...prev, formality: Math.round(p.defaultFormality * 100) })); setActivePreset(null); }} />))}</div></div>
+              <div><SectionTitle>Target Persona</SectionTitle><div className="grid grid-cols-1 sm:grid-cols-2 gap-2">{personas.map((p) => (<PersonaCard key={p.id} persona={p} selected={selectedPersona === p.id} onSelect={() => { setSelectedPersona(p.id); setRoom(p.defaultRoom); setTone((prev) => ({ ...prev, formality: Math.round(p.defaultFormality * 100) })); setActivePreset(null); }} />))}</div></div>
               <div><SectionTitle>Briefing Room</SectionTitle><BriefingRoomSelector selected={room} onSelect={setRoom} /></div>
             </div>
           )}

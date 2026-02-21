@@ -286,7 +286,7 @@ export default function TrackingMode() {
   };
 
   return (
-    <div className="grid grid-cols-[1fr_1.2fr] gap-6 mt-4">
+    <div className="grid grid-cols-1 md:grid-cols-[1fr_1.2fr] gap-6 mt-4">
       {/* Left: Tracking checklist + trends */}
       <div className="space-y-4">
         {/* Pipeline Progress — PM view */}

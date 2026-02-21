@@ -99,7 +99,7 @@ export default function EvidenceMode() {
                       </div>
 
                       {/* Signals row */}
-                      <div className="flex items-center gap-2 mt-2">
+                      <div className="flex flex-wrap items-center gap-2 mt-2">
                         {signals.noticeRisk && (
                           <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-[var(--color-semantic-red-dim)] text-[var(--color-semantic-red)]">
                             <AlertTriangle size={10} /> Notice Risk

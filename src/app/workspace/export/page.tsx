@@ -760,7 +760,7 @@ export default function ExportPage() {
       </div>
 
       {/* 2-column layout */}
-      <div className="flex-1 grid grid-cols-[1fr_320px] gap-4 min-h-0">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4 min-h-0">
         {/* Left: Project Assistant */}
         <ExportAssistantPanel
           className="min-h-0"
@@ -921,7 +921,7 @@ export default function ExportPage() {
             <div className="text-[11px] font-bold uppercase tracking-[1.2px] text-[var(--color-text-muted)] mb-2">
               Project Snapshot
             </div>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
               <div>
                 <div className="text-sm font-data font-semibold text-[var(--color-text-primary)]">
                   ${(activeProject.contractValue / 1e6).toFixed(1)}M

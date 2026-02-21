@@ -361,7 +361,7 @@ export default function FieldCaptureModal({ open, onClose, onCreated }: Props) {
               <label className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider block mb-2">
                 Severity
               </label>
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {SEVERITY_OPTIONS.map((s) => (
                   <button
                     key={s.value}

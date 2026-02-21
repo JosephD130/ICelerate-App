@@ -335,7 +335,7 @@ export default function PmCreateModal({ open, onClose, onCreated }: Props) {
                   <label className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider block mb-2">
                     Severity
                   </label>
-                  <div className="grid grid-cols-4 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {SEVERITY_OPTIONS.map((s) => {
                       const colors = SEVERITY_COLORS[s];
                       return (

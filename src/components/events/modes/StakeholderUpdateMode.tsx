@@ -311,7 +311,7 @@ export default function StakeholderUpdateMode() {
       )}
 
       {/* Input + Generate */}
-      <div className="grid grid-cols-[1fr_auto] gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-4 mb-6">
         <div className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-[var(--radius-card)] p-4">
           <SectionTitle>Technical Update</SectionTitle>
           <textarea value={input} onChange={(e) => setInput(e.target.value)} className="w-full h-28 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-input)] p-3 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-dim)] resize-none focus:border-[var(--color-accent)] focus:outline-none" placeholder="Enter update for stakeholders..." />
@@ -334,7 +334,7 @@ export default function StakeholderUpdateMode() {
           {showAdvanced && (
             <div className="px-4 pb-4 space-y-4">
               <div><SectionTitle>Tone Calibration</SectionTitle><ToneSliders settings={tone} onChange={setTone} /></div>
-              <div><SectionTitle>Target Persona</SectionTitle><div className="grid grid-cols-2 gap-2">{personas.map((p) => (<PersonaCard key={p.id} persona={p} selected={selectedPersona === p.id} onSelect={() => { setSelectedPersona(p.id); setRoom(p.defaultRoom); setTone((prev) => ({ ...prev, formality: Math.round(p.defaultFormality * 100) })); setActivePreset(""); }} />))}</div></div>
+              <div><SectionTitle>Target Persona</SectionTitle><div className="grid grid-cols-1 sm:grid-cols-2 gap-2">{personas.map((p) => (<PersonaCard key={p.id} persona={p} selected={selectedPersona === p.id} onSelect={() => { setSelectedPersona(p.id); setRoom(p.defaultRoom); setTone((prev) => ({ ...prev, formality: Math.round(p.defaultFormality * 100) })); setActivePreset(""); }} />))}</div></div>
               <div><SectionTitle>Briefing Room</SectionTitle><BriefingRoomSelector selected={room} onSelect={setRoom} /></div>
             </div>
           )}
@@ -344,7 +344,7 @@ export default function StakeholderUpdateMode() {
       {/* Output — multi-stakeholder panels */}
       {isMultiMode && (
         <>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {panels.map((panel) => {
               const p = personas.find((x) => x.id === panel.id);
               const done = !panel.isStreaming && panel.text && !panel.error;

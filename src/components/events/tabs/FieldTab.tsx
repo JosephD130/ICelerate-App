@@ -267,7 +267,7 @@ export default function FieldTab() {
   if (!activeEvent) return null;
 
   return (
-    <div className="grid grid-cols-[1fr_1.2fr] gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-[1fr_1.2fr] gap-6">
       {/* Left — Input */}
       <div className="space-y-4">
         <div className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-[var(--radius-card)] p-4">
@@ -340,7 +340,7 @@ export default function FieldTab() {
             </button>
           )}
 
-          <div className="grid grid-cols-2 gap-3 mt-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
             <div>
               <label className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider block mb-1">
                 Location

@@ -152,7 +152,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen">
       {/* ─── Nav ─────────────────────────────────── */}
-      <nav className="sticky top-0 z-50 flex items-center justify-end gap-6 px-8 py-4 border-b border-[var(--color-border)] bg-[var(--color-navy)]/90 backdrop-blur-md">
+      <nav className="sticky top-0 z-50 flex items-center justify-end gap-4 sm:gap-6 px-4 sm:px-8 py-4 border-b border-[var(--color-border)] bg-[var(--color-navy)]/90 backdrop-blur-md">
         <a
           href="#about"
           className="text-xs font-data uppercase tracking-widest text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
