@@ -281,7 +281,7 @@ export default function AddProjectWizard({ open, onClose, onCreated }: Props) {
                 </div>
 
                 {/* Project Type + Contract Value row */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-medium text-[var(--color-text-secondary)] mb-1">
                       Project Type
@@ -393,7 +393,7 @@ export default function AddProjectWizard({ open, onClose, onCreated }: Props) {
                   Select which data sources this project will use. You can add more later from Connect.
                 </p>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {SOURCE_CARDS.map((src) => {
                     const Icon = src.icon;
                     const enabled = form.enabledSources.has(src.key);

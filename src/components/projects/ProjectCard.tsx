@@ -52,7 +52,7 @@ export default function ProjectCard({
         isCurrent
           ? "border-[var(--color-accent)]/40 ring-1 ring-[var(--color-accent)]/20"
           : "border-[var(--color-border)]"
-      } ${variant === "priority" ? "px-5 py-4 flex items-center gap-5" : "p-4 flex flex-col"}`}
+      } ${variant === "priority" ? "px-4 sm:px-5 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5" : "p-4 flex flex-col"}`}
     >
       {/* Score badge */}
       <div className={`flex flex-col items-center shrink-0 ${variant === "priority" ? "" : "mb-3"}`}>
@@ -108,7 +108,7 @@ export default function ProjectCard({
       </div>
 
       {/* Right side (priority) / Bottom (grid) */}
-      <div className={`flex items-center gap-2 ${variant === "priority" ? "shrink-0" : "mt-auto pt-2 border-t border-[var(--color-border)]"}`}>
+      <div className={`flex flex-wrap items-center gap-1.5 sm:gap-2 ${variant === "priority" ? "shrink-0" : "mt-auto pt-2 border-t border-[var(--color-border)]"}`}>
         {/* Badge stack */}
         <span className="text-xs font-data text-[var(--color-text-dim)]">
           {openEvents} open

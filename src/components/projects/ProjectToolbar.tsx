@@ -40,7 +40,7 @@ export default function ProjectToolbar({
   onTierToggle,
 }: Props) {
   return (
-    <div className="flex items-center gap-3 flex-wrap mb-4">
+    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-4">
       {/* View toggle */}
       <div className="flex items-center rounded-[var(--radius-sm)] border border-[var(--color-border)] overflow-hidden">
         {VIEWS.map(({ id, icon: Icon, label }) => (

@@ -143,10 +143,10 @@ export default function ProjectsPage() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* ─── Dark header zone ─── */}
-      <div className="bg-[var(--color-navy)] px-6 md:px-8 pt-6 md:pt-8 pb-4">
+      <div className="bg-[var(--color-navy)] px-4 sm:px-6 md:px-8 pt-6 md:pt-8 pb-4">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
             <div className="flex items-center gap-3">
               <Image
                 src="/Logo-ICelerate.png"
@@ -173,7 +173,7 @@ export default function ProjectsPage() {
           </div>
 
           {/* Action row */}
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             {FLAGS.addProject && (
               <button
                 onClick={() => setWizardOpen(true)}
@@ -203,7 +203,7 @@ export default function ProjectsPage() {
       </div>
 
       {/* ─── Light content zone ─── */}
-      <div className="light-content flex-1 rounded-t-2xl -mt-1 px-6 md:px-8 py-6">
+      <div className="light-content flex-1 rounded-t-2xl -mt-1 px-4 sm:px-6 md:px-8 py-6">
         <div className="max-w-6xl mx-auto">
           {/* Toolbar */}
           <ProjectToolbar

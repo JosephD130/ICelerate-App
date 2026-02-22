@@ -270,7 +270,7 @@ export default function RealitySyncPanel({ onMenuClick }: { onMenuClick?: () => 
               <span className="w-px h-5 bg-[var(--color-border)]" />
             </>
           )}
-          <div className="inline-flex border border-[var(--color-border)] rounded-[var(--radius-sm)] overflow-hidden">
+          <div className="hidden md:inline-flex border border-[var(--color-border)] rounded-[var(--radius-sm)] overflow-hidden">
             {(["field", "pm", "stakeholder"] as Role[]).map((r) => (
               <button
                 key={r}
@@ -284,7 +284,7 @@ export default function RealitySyncPanel({ onMenuClick }: { onMenuClick?: () => 
                 aria-label={`Switch to ${ROLE_LABELS[r].label} role`}
               >
                 {ROLE_LABELS[r].icon}
-                <span className="hidden sm:inline">{ROLE_LABELS[r].label}</span>
+                {ROLE_LABELS[r].label}
               </button>
             ))}
           </div>
@@ -293,6 +293,31 @@ export default function RealitySyncPanel({ onMenuClick }: { onMenuClick?: () => 
             size={14}
             className={`transition-transform text-[var(--color-text-dim)] ${expanded ? "rotate-180" : ""}`}
           />
+        </div>
+      </div>
+
+      {/* Mobile role switcher — visible only on small screens */}
+      <div
+        className="flex md:hidden items-center justify-between px-4 py-1.5 bg-[var(--color-surface)] border-b border-[var(--color-border)]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <span className="text-[10px] uppercase tracking-wider text-[var(--color-text-dim)] font-semibold">View as</span>
+        <div className="inline-flex border border-[var(--color-border)] rounded-[var(--radius-sm)] overflow-hidden">
+          {(["field", "pm", "stakeholder"] as Role[]).map((r) => (
+            <button
+              key={r}
+              type="button"
+              onClick={() => setRole(r)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all ${
+                role === r
+                  ? "bg-slate-800 text-white"
+                  : "bg-transparent text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]"
+              }`}
+            >
+              {ROLE_LABELS[r].icon}
+              {ROLE_LABELS[r].label}
+            </button>
+          ))}
         </div>
       </div>
 
