@@ -7,6 +7,7 @@ const WINDOW_MS = 60_000; // 1 minute
 const LIMITS: Record<string, number> = {
   "/api/claude": 15,
   "/api/extract-pdf": 10,
+  "/api/search": 10,
 };
 
 interface WindowEntry {
@@ -55,5 +56,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/api/claude", "/api/extract-pdf"],
+  matcher: ["/api/claude", "/api/extract-pdf", "/api/search"],
 };

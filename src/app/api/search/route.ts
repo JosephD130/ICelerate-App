@@ -9,6 +9,9 @@ export async function POST(req: NextRequest) {
     if (!query || typeof query !== "string") {
       return NextResponse.json({ error: "query is required" }, { status: 400 });
     }
+    if (query.length > 2000) {
+      return NextResponse.json({ error: "Query too long" }, { status: 400 });
+    }
 
     const response = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
